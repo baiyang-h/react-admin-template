@@ -1,21 +1,22 @@
+import {ConfigProvider} from "antd";
+import { Routes, Route } from "react-router";
 import './App.css';
-import {Button, ConfigProvider} from "antd";
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
 // 由于 antd 组件的默认文案是英文，所以需要修改为中文
 import zhCN from 'antd/locale/zh_CN';
 
-dayjs.locale('zh-cn');
+import Home from './views/home'
 
-const handleClick = () => {
-  console.log(123);
-};
+dayjs.locale('zh-cn');
 
 function App() {
   return (
     <ConfigProvider locale={zhCN}>
       <div className="App">
-        <Button type="primary" onClick={handleClick}>Button</Button>
+        <Routes>
+          <Route path="home" element={<Home />} />
+        </Routes>
       </div>
     </ConfigProvider>
   );
