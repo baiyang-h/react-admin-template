@@ -8,16 +8,17 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
+import './index.scss'
 const { Header, Sider, Content } = Layout;
-const MyLayout = () => {
+const AppLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <Layout>
+    <Layout className="app-layout">
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
+        <div className="logo" />
         <Menu
           theme="dark"
           mode="inline"
@@ -74,4 +75,4 @@ const MyLayout = () => {
     </Layout>
   );
 };
-export default MyLayout;
+export default AppLayout;
