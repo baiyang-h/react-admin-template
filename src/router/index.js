@@ -1,2 +1,1 @@
-import { constantRouters, appRouters } from './router.config'
-
+export { constantRoutes, appRoutes} from './router.config'
