@@ -1,5 +1,5 @@
 // 常量路由
-export const constantRoutes = [
+const constantRoutes = [
   {
     title: 'Login',
     path: '/login',
@@ -34,7 +34,7 @@ export const constantRoutes = [
  * hidden   菜单模块隐藏/显示
  * roles  表示权限，[admin, other]， 表示有这两种权限，admin表示超级管理员，如果roles没写，没有，则表示全权限
  */
-export const appRoutes = [
+const appRoutes = [
   {
     path: '/home',
     name: 'Home',
@@ -96,3 +96,8 @@ export const appRoutes = [
     ]
   },
 ]
+
+export default {
+  constantRoutes,
+  appRoutes
+}

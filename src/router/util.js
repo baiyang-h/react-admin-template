@@ -1,5 +1,5 @@
 import { isUrl } from "@/utils/common/regexp";
-import { join } from 'node:path'
+import { join } from 'path-browserify'
 
 /**
  * @description 将应用路由进行重新格式化，主要针对 appRoutes 应用路由，将 children 路由的 path 和 roles，根据父级补全，如 父 /home，子 index --> 子格式化为 /home/index
@@ -8,7 +8,7 @@ import { join } from 'node:path'
  * @param parentRoles   父的 roles   父的权限补齐子权限
  * @returns {*}         返回一个新的 routes
  */
-export const formatAppRouter = (routes, parentPath='/', parentRoles) => {
+export const formatAppRouter = (routes, parentPath='/', parentRoles=[]) => {
   return routes.map(item => {
     let { path } = item;
     // 是否是 url 地址
