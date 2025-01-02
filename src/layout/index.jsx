@@ -9,7 +9,6 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import './index.scss'
-import { appRoutes } from '@/router'
 
 const { Header, Sider, Content } = Layout;
 
@@ -18,7 +17,6 @@ const AppLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  console.log(appRoutes)
   return (
     <Layout className="app-layout">
       <Sider trigger={null} collapsible collapsed={collapsed}>
