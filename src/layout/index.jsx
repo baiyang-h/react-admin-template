@@ -12,11 +12,12 @@ import './index.scss'
 
 const { Header, Sider, Content } = Layout;
 
-const AppLayout = () => {
+const MainLayout = ({ permissions }) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  console.log(permissions)
   return (
     <Layout className="app-layout">
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -77,4 +78,4 @@ const AppLayout = () => {
     </Layout>
   );
 };
-export default AppLayout;
+export default MainLayout;

@@ -30,3 +30,15 @@ export const formatAppRouter = (routes, parentPath='/', parentRoles=[]) => {
     return result;
   });
 }
+
+// 根据权限过滤路由（递归处理）
+export const filterRoutes = (routes, permissions=[]) => {
+  return routes.filter((route) =>
+    route.meta && route.meta.permission ? permissions.includes(route.meta.permission) : true
+  ).map((route) => ({
+    ...route,
+    children: route.children
+      ? filterRoutes(route.children, permissions)
+      : [],
+  }));
+}
