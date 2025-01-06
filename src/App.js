@@ -1,5 +1,5 @@
 import {ConfigProvider} from "antd";
-import { Routes, Route } from "react-router";
+import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router";
 import './App.css';
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
@@ -7,33 +7,48 @@ import 'dayjs/locale/zh-cn';
 import zhCN from 'antd/locale/zh_CN';
 
 import { constantRoutes, appRoutes } from './router'
-import MainLayout from './layout'
+import Layout from './layout'
 
 dayjs.locale('zh-cn');
 
 // 模拟权限数据
-const userPermissions = ['home', 'permission', 'permissionPage', 'permissionRole', 'table', 'dragTable', 'form', 'nested', 'nestedMenu1', 'nestedMenu1-1', 'nestedMenu1-2', 'nestedMenu1-2-1', 'nestedMenu1-2-2'];
+const userPermissions = [
+  'home',
+  'permission',
+  'permissionPage',
+  'permissionRole',
+  'table',
+  'dragTable',
+  'form',
+  'nested',
+  'nestedMenu1',
+  'nestedMenu1-1',
+  'nestedMenu1-2',
+  'nestedMenu1-2-1',
+  'nestedMenu1-2-2'
+];
 
 // 递归渲染路由函数
-const renderRoutes = (routes) => {
+const renderRoutes = (routes, permissions) => {
   return routes.map((route) => {
-    // 如果当前路由有子路由，则递归渲染
-    if (route.children && route.children.length) {
+    const { path, element, children, meta } = route;
+
+    // 权限判断：没有权限直接跳过该路由
+    if (meta?.permission && !permissions.includes(meta.permission)) {
+      return null;
+    }
+
+    // 如果有子路由，则递归处理
+    if (children && children.length) {
       return (
-        <Route path={route.path} key={route.path}>
-          {renderRoutes(route.children)}
+        <Route path={path} key={path} element={element || <Navigate to={`${path}/${children[0].path}`} />}>
+          {renderRoutes(route.children, permissions)}
         </Route>
       );
     }
 
-    // 如果没有子路由，则直接渲染
-    return (
-      <Route
-        path={route.path}
-        key={route.path}
-        element={route.element}
-      />
-    );
+    // 返回普通路由
+    return <Route key={path} path={path} element={element} />;
   });
 };
 
@@ -41,14 +56,21 @@ function App() {
   return (
     <ConfigProvider locale={zhCN}>
       <div className="App">
-        <Routes>
-          {
-            constantRoutes.map(item => <Route key={item.path} path={item.path} element={item.element} />)
-          }
-          <Route element={<MainLayout permissions={userPermissions} />}>
-            { renderRoutes(appRoutes) }
-          </Route>
-        </Routes>
+        <Router>
+          <Routes>
+            {/* 渲染 constantRoutes（无需权限判断） */}
+            { renderRoutes(constantRoutes, []) }
+
+            {/* 渲染带 Layout 的路由 */}
+            <Route path="/" element={<Layout />}>
+              {/* 渲染 appRoutes（需要权限判断） */}
+              {renderRoutes(appRoutes, userPermissions)}
+            </Route>
+
+            {/* 未匹配路由时重定向到 404 */}
+            <Route path="*" element={<Navigate to="/404" />} />
+          </Routes>
+        </Router>
       </div>
     </ConfigProvider>
   );

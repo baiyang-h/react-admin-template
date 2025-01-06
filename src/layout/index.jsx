@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import {Outlet, useNavigate} from "react-router";
 import React, { useState } from 'react';
 import {
   MenuFoldOutlined,
@@ -8,16 +8,63 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
+import { appRoutes } from '../router'
 import './index.scss'
-
 const { Header, Sider, Content } = Layout;
 
-const MainLayout = ({ permissions }) => {
+
+// 递归生成菜单
+const generateMenuItems = (routes, permissions) => {
+  return routes
+    .filter((route) => !route.meta?.permission || permissions.includes(route.meta.permission)) // 过滤没有权限的菜单
+    .map((route) => {
+      if (route.children && route.children.length) {
+        return {
+          key: route.path,
+          label: route.meta?.title,
+          icon: route.meta?.icon,
+          children: generateMenuItems(route.children, permissions),
+        };
+      }
+      return {
+        key: route.path,
+        label: route.meta?.title,
+        icon: route.meta?.icon,
+      };
+    });
+};
+
+const AppLayout = ({ permissions }) => {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  console.log(permissions)
+
+  // 模拟权限数据
+  const userPermissions = [
+    'home',
+    'permission',
+    'permissionPage',
+    'permissionRole',
+    'table',
+    'dragTable',
+    'form',
+    'nested',
+    'nestedMenu1',
+    'nestedMenu1-1',
+    'nestedMenu1-2',
+    'nestedMenu1-2-1',
+    'nestedMenu1-2-2'
+  ];
+
+  const menuItems = generateMenuItems(appRoutes, userPermissions);
+
+  const handleMenuClick = ({ key }) => {
+    // navigate(key); // 路由跳转
+    console.log(key)
+  };
+
   return (
     <Layout className="app-layout">
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -26,23 +73,8 @@ const MainLayout = ({ permissions }) => {
           theme="dark"
           mode="inline"
           defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
-            },
-            {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
-            },
-          ]}
+          items={menuItems}
+          onClick={handleMenuClick}
         />
       </Sider>
       <Layout>
@@ -78,4 +110,4 @@ const MainLayout = ({ permissions }) => {
     </Layout>
   );
 };
-export default MainLayout;
+export default AppLayout;
