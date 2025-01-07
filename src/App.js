@@ -29,26 +29,28 @@ const userPermissions = [
 ];
 
 // 递归渲染路由函数
-const renderRoutes = (routes, permissions) => {
+const renderRoutes = (routes, permissions, parentPath = '') => {
   return routes.map((route) => {
     const { path, element, children, meta } = route;
+
+    // 拼接完整路径
+    const fullPath = `${parentPath}/${path}`.replace(/\/+/g, '/').replace(/\/$/, '');
 
     // 权限判断：没有权限直接跳过该路由
     if (meta?.permission && !permissions.includes(meta.permission)) {
       return null;
     }
-
     // 如果有子路由，则递归处理
     if (children && children.length) {
       return (
-        <Route path={path} key={path} element={element || <Navigate to={`${path}/${children[0].path}`} />}>
-          {renderRoutes(route.children, permissions)}
+        <Route path={path} key={fullPath} element={element || <Navigate to={`${fullPath}/${children[0].path}`} />}>
+          {renderRoutes(route.children, permissions, fullPath)}
         </Route>
       );
     }
 
     // 返回普通路由
-    return <Route key={path} path={path} element={element} />;
+    return <Route key={fullPath} path={fullPath} element={element} />;
   });
 };
 

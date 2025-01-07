@@ -1,3 +1,4 @@
 import React from "react";
-
-export default () => <div>page</div>
+export default function PermissionPage() {
+  return <div>page</div>
+}

@@ -14,27 +14,29 @@ const { Header, Sider, Content } = Layout;
 
 
 // 递归生成菜单
-const generateMenuItems = (routes, permissions) => {
+const generateMenuItems = (routes, permissions, parentPath = '') => {
   return routes
-    .filter((route) => !route.meta?.permission || permissions.includes(route.meta.permission)) // 过滤没有权限的菜单
+    .filter((route) => !route.meta?.permission || permissions.includes(route.meta.permission)) // 首先看有没有permission，如果没有表示不需要权限验证则直接展示，如果有的话则过滤没有权限的菜单
     .map((route) => {
+      // 1.拼接完整路径，避免多个斜杠，2.如果最后也是斜杆则也去除
+      const fullPath = `${parentPath}/${route.path}`.replace(/\/+/g, '/').replace(/\/$/, '');
       if (route.children && route.children.length) {
         return {
-          key: route.path,
+          key: fullPath,
           label: route.meta?.title,
           icon: route.meta?.icon,
-          children: generateMenuItems(route.children, permissions),
+          children: generateMenuItems(route.children, permissions, fullPath),
         };
       }
       return {
-        key: route.path,
+        key: fullPath,
         label: route.meta?.title,
         icon: route.meta?.icon,
       };
     });
 };
 
-const AppLayout = ({ permissions }) => {
+const AppLayout = () => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -61,8 +63,8 @@ const AppLayout = ({ permissions }) => {
   const menuItems = generateMenuItems(appRoutes, userPermissions);
 
   const handleMenuClick = ({ key }) => {
-    // navigate(key); // 路由跳转
     console.log(key)
+    navigate(key); // 路由跳转
   };
 
   return (
@@ -104,6 +106,7 @@ const AppLayout = ({ permissions }) => {
             borderRadius: borderRadiusLG,
           }}
         >
+          {/* 渲染子路由 */}
           <Outlet />
         </Content>
       </Layout>

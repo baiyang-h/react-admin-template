@@ -172,3 +172,18 @@ export const appRoutes = [
     ]
   },
 ]
+
+function generateFullPath(routes, parentPath = '') {
+  return routes.map((route) => {
+    // 1.拼接完整路径，避免多个斜杠，2.如果最后也是斜杆则也去除
+    const fullPath = `${parentPath}/${route.path}`.replace(/\/+/g, '/').replace(/\/$/, '');
+    const updatedRoute = { ...route, path: fullPath };
+
+    // 如果有子路由，递归处理
+    if (route.children && route.children.length) {
+      updatedRoute.children = generateFullPath(route.children, fullPath);
+    }
+
+    return updatedRoute;
+  });
+};
