@@ -43,7 +43,7 @@ const renderRoutes = (routes, permissions, parentPath = '') => {
     // 如果有子路由，则递归处理
     if (children && children.length) {
       return (
-        <Route path={path} key={fullPath} element={element || <Navigate to={`${fullPath}/${children[0].path}`} />}>
+        <Route path={path} key={fullPath} element={element}>
           {renderRoutes(route.children, permissions, fullPath)}
         </Route>
       );

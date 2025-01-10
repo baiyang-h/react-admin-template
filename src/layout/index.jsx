@@ -1,5 +1,5 @@
-import {Outlet, useNavigate} from "react-router";
-import React, { useState } from 'react';
+import {Outlet, useNavigate, useLocation} from "react-router";
+import React, { useState, useEffect } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -37,11 +37,14 @@ const generateMenuItems = (routes, permissions, parentPath = '') => {
 };
 
 const AppLayout = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [openKeys, setOpenKeys] = useState([]);
 
   // 模拟权限数据
   const userPermissions = [
@@ -62,6 +65,32 @@ const AppLayout = () => {
 
   const menuItems = generateMenuItems(appRoutes, userPermissions);
 
+  // 根据当前路径设置选中的菜单项和展开的子菜单
+  useEffect(() => {
+    const pathname = location.pathname;
+    // 设置当前选中的菜单项
+    setSelectedKeys([pathname]);
+
+    // 设置需要展开的父级菜单
+    const getOpenKeys = (path) => {
+      const result = [];
+      let tempPath = '';
+      path.split('/').forEach(item => {
+        if (item) {
+          tempPath += `/${item}`;
+          result.push(tempPath);
+        }
+      });
+      return result.slice(0, -1); // 去掉最后一个（当前路径）
+    };
+    setOpenKeys(getOpenKeys(pathname));
+  }, [location.pathname]);
+
+  // 处理子菜单展开/收起
+  const onOpenChange = (keys) => {
+    setOpenKeys(keys);
+  };
+
   const handleMenuClick = ({ key }) => {
     console.log(key)
     navigate(key); // 路由跳转
@@ -74,8 +103,10 @@ const AppLayout = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          selectedKeys={selectedKeys}
+          openKeys={openKeys}
           items={menuItems}
+          onOpenChange={onOpenChange}
           onClick={handleMenuClick}
         />
       </Sider>

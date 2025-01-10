@@ -95,7 +95,7 @@ export const appRoutes = [
     },
     children: [
       {
-        path: '',
+        path: 'index',
         element: <Table />,
         meta: {
           title: '基础表格',
