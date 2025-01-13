@@ -1,16 +1,30 @@
-import Login from '../views/login'
-import ErrorPage403 from '../views/error-page/403'
-import ErrorPage404 from '../views/error-page/404'
-import ErrorPage500 from '../views/error-page/500'
-import Home from '../views/home'
-import PermissionPage from '../views/permission/page'
-import PermissionRole from '../views/permission/role'
-import Table from '../views/table'
-import DragTable from '../views/table/drag-table'
-import Form from '../views/form'
-import NestedMenu1a1 from '../views/nested/menu1/menu1-1'
-import NestedMenu1a2a1 from '../views/nested/menu1/menu1-2/menu1-2-1'
-import NestedMenu1a2a2 from '../views/nested/menu1/menu1-2/menu1-2-2'
+import { lazy } from 'react';
+import LazyLoad from '@/components/LazyLoad';
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// 开发环境使用延迟，生产环境不使用
+const lazyLoadWithDelay = (factory, ms = 2000) => {
+  return lazy(async () => {
+    await delay(ms);
+    return factory();
+  });
+};
+
+
+// 动态导入组件
+const Login = lazy(() => import(/* webpackChunkName: "Login" */ '../views/login'))
+const ErrorPage403 = lazy(() => import(/* webpackChunkName: "ErrorPage403" */ '../views/error-page/403'))
+const ErrorPage404 = lazy(() => import(/* webpackChunkName: "ErrorPage404" */ '../views/error-page/404'))
+const ErrorPage500 = lazy(() => import(/* webpackChunkName: "ErrorPage500" */ '../views/error-page/500'))
+const Home = lazy(() => import(/* webpackChunkName: "Home" */ '../views/home'))
+const PermissionPage = lazy(() => import(/* webpackChunkName: "PermissionPage" */ '../views/permission/page'))
+const PermissionRole = lazy(() => import(/* webpackChunkName: "PermissionRole" */ '../views/permission/role'))
+const Table = lazy(() => import(/* webpackChunkName: "Table" */ '../views/table'))
+const DragTable = lazy(() => import(/* webpackChunkName: "DragTable" */ '../views/table/drag-table'))
+const Form = lazy(() => import(/* webpackChunkName: "Form" */ '../views/form'))
+const NestedMenu1a1 = lazy(() => import(/* webpackChunkName: "NestedMenu1a1" */ '../views/nested/menu1/menu1-1'))
+const NestedMenu1a2a1 = lazy(() => import(/* webpackChunkName: "NestedMenu1a2a1" */ '../views/nested/menu1/menu1-2/menu1-2-1'))
+const NestedMenu1a2a2 = lazy(() => import(/* webpackChunkName: "NestedMenu1a2a2" */ '../views/nested/menu1/menu1-2/menu1-2-2'))
 
 // 模拟权限数据
 // const userPermissions = ['home', 'permission', 'permissionPage', 'permissionRole', 'table', 'dragTable', 'form', 'nested', 'nestedMenu1', 'nestedMenu1-1', 'nestedMenu1-2', 'nestedMenu1-2-1', 'nestedMenu1-2-2'];
@@ -18,28 +32,28 @@ import NestedMenu1a2a2 from '../views/nested/menu1/menu1-2/menu1-2-2'
 export const constantRoutes = [
   {
     path: '/login',
-    element: <Login />,
+    element: <LazyLoad><Login /></LazyLoad>,
     meta: {
       title: 'Login',
     },
   },
   {
     path: '/403',
-    element: <ErrorPage403 />,
+    element: <LazyLoad><ErrorPage403 /></LazyLoad>,
     meta: {
       title: '403',
     },
   },
   {
     path: '/404',
-    element: <ErrorPage404 />,
+    element: <LazyLoad><ErrorPage404 /></LazyLoad>,
     meta: {
       title: '404',
     },
   },
   {
     path: '/500',
-    element: <ErrorPage500 />,
+    element: <LazyLoad><ErrorPage500 /></LazyLoad>,
     meta: {
       title: '500',
     },
@@ -56,7 +70,7 @@ export const constantRoutes = [
 export const appRoutes = [
   {
     path: '/home',
-    element: <Home />,
+    element: <LazyLoad><Home /></LazyLoad>,
     meta: {
       title: 'Home',
       permission: 'home'
@@ -71,7 +85,7 @@ export const appRoutes = [
     children: [
       {
         path: 'page',
-        element: <PermissionPage />,
+        element: <LazyLoad><PermissionPage /></LazyLoad>,
         meta: {
           title: 'PermissionPage',
           permission: 'permissionPage'
@@ -79,7 +93,7 @@ export const appRoutes = [
       },
       {
         path: 'role',
-        element: <PermissionRole />,
+        element: <LazyLoad><PermissionRole /></LazyLoad>,
         meta: {
           title: 'PermissionRole',
           permission: 'permissionRole'
@@ -96,7 +110,7 @@ export const appRoutes = [
     children: [
       {
         path: 'index',
-        element: <Table />,
+        element: <LazyLoad><Table /></LazyLoad>,
         meta: {
           title: '基础表格',
           permission: 'table'
@@ -104,7 +118,7 @@ export const appRoutes = [
       },
       {
         path: 'dragTable',
-        element: <DragTable />,
+        element: <LazyLoad><DragTable /></LazyLoad>,
         meta: {
           title: '拖拽表格',
           permission: 'dragTable'
@@ -114,7 +128,7 @@ export const appRoutes = [
   },
   {
     path: '/form',
-    element: <Form />,
+    element: <LazyLoad><Form /></LazyLoad>,
     meta: {
       title: 'Form',
       permission: 'form'
@@ -136,7 +150,7 @@ export const appRoutes = [
         children: [
           {
             path: 'menu1-1',
-            element: <NestedMenu1a1 />,
+            element: <LazyLoad><NestedMenu1a1 /></LazyLoad>,
             meta: {
               title: 'NestedMenu1-1',
               permission: 'nestedMenu1-1'
@@ -151,7 +165,7 @@ export const appRoutes = [
             children: [
               {
                 path: 'menu1-2-1',
-                element: <NestedMenu1a2a1 />,
+                element: <LazyLoad><NestedMenu1a2a1 /></LazyLoad>,
                 meta: {
                   title: 'NestedMenu1-2-1',
                   permission: 'nestedMenu1-2-1'
@@ -159,7 +173,7 @@ export const appRoutes = [
               },
               {
                 path: 'menu1-2-2',
-                element: <NestedMenu1a2a2 />,
+                element: <LazyLoad><NestedMenu1a2a2 /></LazyLoad>,
                 meta: {
                   title: 'NestedMenu1-2-2',
                   permission: 'nestedMenu1-2-2'
