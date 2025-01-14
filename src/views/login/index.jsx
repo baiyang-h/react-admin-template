@@ -1,23 +1,29 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
+import { login, selectUserLoading, selectLoginError } from '@/store/user';
 import './index.css';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const loading = useSelector(selectUserLoading);
+  const error = useSelector(selectLoginError);
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
+    console.log('登录信息:', values);
     try {
-      // 这里添加实际的登录逻辑
-      console.log('登录信息:', values);
-      
-      // 模拟登录成功
+      await dispatch(login(values)).unwrap();
+      // 登录成功后的处理
       message.success('登录成功！');
       // 登录成功后跳转到首页
       navigate('/');
-    } catch (error) {
+    } catch (err) {
       message.error('登录失败，请重试！');
+      // 错误处理
+      console.log(err.message);
     }
   };
 

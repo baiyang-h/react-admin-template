@@ -1,6 +1,7 @@
 import axios from "axios";
-// import errorHandle from './error'
+import errorHandle from './error'
 
+console.log(process.env);
 /*
 if (process.env.NODE_ENV == 'development') {
   axios.defaults.baseURL = 'https://www.baidu.com';}
@@ -12,12 +13,12 @@ else if (process.env.NODE_ENV == 'production') {
 }
 */
 const service = axios.create({
-    baseURL: '/api',    // url = base url + request url       也可   process.env.REACT_APP_A  本地请求远程数据在 vue.config.js中配置代理
+    // baseURL: process.env.REACT_APP_A,    // url = base url + request url
     timeout: 10000,
     headers: {
-        // application/json;charset=UTF-8
-        // application/x-www-form-urlencoded
-        'content-type': 'application/json;charset=UTF-8'
+        post: {
+            "Content-Type": "application/json;charset=UTF-8",
+        },
     },
 });
 
@@ -52,7 +53,7 @@ service.interceptors.response.use(
             return Promise.reject(response)
           }
       */
-        return response.data;
+        return response;
     },
     // 响应 3xx、4xx、5xx 等 走这里
     function (error) {
@@ -62,7 +63,7 @@ service.interceptors.response.use(
         const { response } = error;
         if (response) {
             // 请求已发出，但是不在2xx的范围
-            // errorHandle(response);
+            errorHandle(response);
             return Promise.reject(response);
         } else {
             // 处理断网的情况
@@ -85,15 +86,6 @@ export const basePost = (url, data, config={}) => {
         method: "post",
         url,
         data,
-        ...config
-    });
-};
-
-export const baseGet = (url, params, config={}) => {
-    return service({
-        method: "get",
-        url,
-        params,
         ...config
     });
 };

@@ -1,3 +1,5 @@
+import { Provider } from 'react-redux';
+import { store } from './store';
 import {ConfigProvider} from "antd";
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router";
 import './App.css';
@@ -56,25 +58,27 @@ const renderRoutes = (routes, permissions, parentPath = '') => {
 
 function App() {
   return (
-    <ConfigProvider locale={zhCN}>
-      <div className="App">
-        <Router>
-          <Routes>
-            {/* 渲染 constantRoutes（无需权限判断） */}
-            { renderRoutes(constantRoutes, []) }
+    <Provider store={store}>
+      <ConfigProvider locale={zhCN}>
+        <div className="App">
+          <Router>
+            <Routes>
+              {/* 渲染 constantRoutes（无需权限判断） */}
+              { renderRoutes(constantRoutes, []) }
 
-            {/* 渲染带 Layout 的路由 */}
-            <Route path="/" element={<Layout />}>
-              {/* 渲染 appRoutes（需要权限判断） */}
-              {renderRoutes(appRoutes, userPermissions)}
-            </Route>
+              {/* 渲染带 Layout 的路由 */}
+              <Route path="/" element={<Layout />}>
+                {/* 渲染 appRoutes（需要权限判断） */}
+                {renderRoutes(appRoutes, userPermissions)}
+              </Route>
 
-            {/* 未匹配路由时重定向到 404 */}
-            <Route path="*" element={<Navigate to="/404" />} />
-          </Routes>
-        </Router>
-      </div>
-    </ConfigProvider>
+              {/* 未匹配路由时重定向到 404 */}
+              <Route path="*" element={<Navigate to="/404" />} />
+            </Routes>
+          </Router>
+        </div>
+      </ConfigProvider>
+    </Provider>
   );
 }
 
