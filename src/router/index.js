@@ -76,6 +76,15 @@ export const appRoutes = [
       permission: 'home'
     },
   },
+  // {
+  //   path: '/sensitive-page',
+  //   element: (
+  //     // 权限判断也可以在这边做判断，也是一种方案
+  //     <PermissionGuard permission="sensitive:view">
+  //       <SensitivePage />
+  //     </PermissionGuard>
+  //   )
+  // }
   {
     path: '/permission',
     meta: {

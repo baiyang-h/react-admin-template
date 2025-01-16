@@ -8,6 +8,7 @@ const Permission = ({ permission, children }) => {
   }
 
   return null;
+  // return <Navigate to="/403" />;
 };
 
 export default Permission;
