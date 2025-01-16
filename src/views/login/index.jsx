@@ -3,19 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import { login, selectUserLoading, selectLoginError } from '@/store/user';
+import { login, selectUserLoading, getUserInfo } from '@/store/user';
 import './index.css';
 
 const Login = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectUserLoading);
-  const error = useSelector(selectLoginError);
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
     console.log('登录信息:', values);
     try {
+      // 登录 
       await dispatch(login(values)).unwrap();
+      // 获取用户信息
+      await dispatch(getUserInfo()).unwrap();
       // 登录成功后的处理
       message.success('登录成功！');
       // 登录成功后跳转到首页
@@ -59,7 +61,7 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block size="large">
+            <Button loading={loading} type="primary" htmlType="submit" block size="large">
               登录
             </Button>
           </Form.Item>

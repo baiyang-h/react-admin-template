@@ -1,15 +1,17 @@
-import { Provider } from 'react-redux';
+import { useEffect } from 'react'
+import { Provider, useDispatch } from 'react-redux';
 import { store } from './store';
 import {ConfigProvider} from "antd";
-import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router";
+import {BrowserRouter as Router, Routes, Route, Navigate, useNavigate} from "react-router";
 import './App.css';
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
 // 由于 antd 组件的默认文案是英文，所以需要修改为中文
 import zhCN from 'antd/locale/zh_CN';
-
 import { constantRoutes, appRoutes } from './router'
 import Layout from './layout'
+import { getUserInfo, selectUserInfo, logout } from './store/user'
+import { getToken } from './utils/token';
 
 dayjs.locale('zh-cn');
 
@@ -57,6 +59,27 @@ const renderRoutes = (routes, permissions, parentPath = '') => {
 };
 
 function App() {
+  // const dispatch = useDispatch();
+  // const userInfo = useSelector(selectUserInfo);
+
+  // useEffect(() => {
+  //   const token = getToken();
+  //   if(token){
+  //     // 有token但没有用户信息时获取用户信息
+  //     if (!userInfo) {
+  //       dispatch(getUserInfo()).catch(err => {
+  //         // 获取用户信息失败(token可能失效)，执行登出操作
+  //         dispatch(logout());
+  //         navigate('/login');
+  //       });
+  //     }
+  //   } else {
+  //     // 没有token时清空用户信息并跳转登录页
+  //     dispatch(logout());
+  //     navigate('/login');
+  //   }
+  // }, [dispatch, userInfo]);
+
   return (
     <Provider store={store}>
       <ConfigProvider locale={zhCN}>

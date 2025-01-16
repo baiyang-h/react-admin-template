@@ -1,5 +1,6 @@
 import axios from "axios";
 import errorHandle from './error'
+import { getToken } from '@/utils/token';
 
 console.log(process.env);
 /*
@@ -27,11 +28,17 @@ service.interceptors.request.use(
         // 每次发送请求之前可以判断是否存在 token
         // 如果存在，则统一在 http 请求的header都加上 token，这样后台根据token判断你的登录情况
         // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
+        // 从cookie中获取token
+        const token = getToken();
+        // 如果token存在，则添加到请求头中
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
         /*
         const token = store.state.token;
         token && (config.headers.token = token);
         */
-        console.log('request', config)
+        // console.log('request', config)
         return config;
     },
     function (error) {

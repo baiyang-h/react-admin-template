@@ -7,8 +7,8 @@ export const login = createAsyncThunk(
   'user/login',
   async (credentials) => {
     const response = await loginApi(credentials);
-    const { token } = response.data;
-    setToken(token);
+    const { data } = response.data;
+    setToken(data);
     return response.data;
   }
 );
@@ -16,9 +16,24 @@ export const login = createAsyncThunk(
   // 获取用户信息action
 export const getUserInfo = createAsyncThunk(
   'user/getUserInfo',
-  async () => {
-    const response = await getUserInfoApi();
-    return response.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getUserInfoApi();
+      // 假设后端返回格式为 { code: 200, data: { userInfo, permissions, roles } }
+      const { code, data } = response.data;
+      
+      if (code === 200) {
+        return {
+          userInfo: data.userInfo,
+          permissions: data.permissions || [],
+          roles: data.roles || []
+        };
+      } else {
+        return rejectWithValue('获取用户信息失败');
+      }
+    } catch (error) {
+      return rejectWithValue(error.message || '获取用户信息失败');
+    }
   }
 );
 
@@ -53,18 +68,30 @@ const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.token;
+        state.token = action.payload.data;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.loginError = action.error.message;
       })
       // 处理获取用户信息状态
+      .addCase(getUserInfo.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(getUserInfo.fulfilled, (state, action) => {
+        state.loading = false;
         state.userInfo = action.payload.userInfo;
         state.permissions = action.payload.permissions;
         state.roles = action.payload.roles;
-      });
+      })
+      .addCase(getUserInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.userInfo = null;
+        state.permissions = [];
+        state.roles = [];
+        // 可以选择在这里处理错误信息
+        // ...
+      }); 
   },
 });
 
