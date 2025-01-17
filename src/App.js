@@ -1,25 +1,10 @@
 import { Routes, Route, Navigate } from "react-router";
+import { useSelector } from 'react-redux';
 import './App.css';
 import { constantRoutes, appRoutes } from './router'
 import Layout from './layout'
 import AuthGuard from './components/AuthGuard'
-
-// 模拟权限数据
-const userPermissions = [
-  'home',
-  'permission',
-  'permissionPage',
-  'permissionRole',
-  'table',
-  'dragTable',
-  'form',
-  'nested',
-  'nestedMenu1',
-  'nestedMenu1-1',
-  'nestedMenu1-2',
-  'nestedMenu1-2-1',
-  'nestedMenu1-2-2'
-];
+import { selectPermissions } from './store/user'
 
 // 递归渲染路由函数
 const renderRoutes = (routes, permissions, parentPath = '') => {
@@ -48,6 +33,9 @@ const renderRoutes = (routes, permissions, parentPath = '') => {
 };
 
 function App() {
+  // 用户权限数据
+  const userPermissions = useSelector(selectPermissions)
+  
   return (
     <div className="App">
       <AuthGuard>

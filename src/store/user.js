@@ -21,6 +21,23 @@ export const getUserInfo = createAsyncThunk(
       const response = await getUserInfoApi();
       // 假设后端返回格式为 { code: 200, data: { userInfo, permissions, roles } }
       const { code, data } = response.data;
+
+      // // 模拟权限数据
+      // const userPermissions = [
+      //   'home',
+      //   'permission',
+      //   'permissionPage',
+      //   'permissionRole',
+      //   'table',
+      //   'dragTable',
+      //   'form',
+      //   'nested',
+      //   'nestedMenu1',
+      //   'nestedMenu1-1',
+      //   'nestedMenu1-2',
+      //   'nestedMenu1-2-1',
+      //   'nestedMenu1-2-2'
+      // ];
       
       if (code === 200) {
         return {

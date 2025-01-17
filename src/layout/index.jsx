@@ -1,5 +1,7 @@
-import {Outlet, useNavigate, useLocation} from "react-router";
 import React, { useState, useEffect } from 'react';
+import {Outlet, useNavigate, useLocation} from "react-router";
+import { useSelector } from 'react-redux';
+import { selectPermissions } from '@/store/user'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -39,29 +41,13 @@ const generateMenuItems = (routes, permissions, parentPath = '') => {
 const AppLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userPermissions = useSelector(selectPermissions);  // 用户权限数据
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [openKeys, setOpenKeys] = useState([]);
-
-  // 模拟权限数据
-  const userPermissions = [
-    'home',
-    'permission',
-    'permissionPage',
-    'permissionRole',
-    'table',
-    'dragTable',
-    'form',
-    'nested',
-    'nestedMenu1',
-    'nestedMenu1-1',
-    'nestedMenu1-2',
-    'nestedMenu1-2-1',
-    'nestedMenu1-2-2'
-  ];
 
   const menuItems = generateMenuItems(appRoutes, userPermissions);
 

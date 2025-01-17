@@ -7,20 +7,22 @@
  * 4.记住用户原始访问路径，登录后可以重定向回去
  * 5.更容易扩展和维护权限相关的功能
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { getToken } from '@/utils/token';
 import { getUserInfo, selectUserInfo, logout } from '@/store/user';
+import { Spin } from 'antd';
 
 const AuthGuard = ({ children }) => {
   const dispatch = useDispatch();
   const userInfo = useSelector(selectUserInfo);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('APP:useEffect', userInfo)
+    console.log('APP:useEffect')
     const checkAuth = async () => {
       const token = getToken();
       
@@ -40,7 +42,11 @@ const AuthGuard = ({ children }) => {
             navigate('/login', {
               state: { from: location.pathname }
             });
+          } finally {
+            setIsLoading(false);
           }
+        } else {
+          setIsLoading(false);
         }
       } else {
         // 没有token时清空用户信息并跳转登录页
@@ -54,6 +60,19 @@ const AuthGuard = ({ children }) => {
     checkAuth();
   }, [dispatch, userInfo, location.pathname]);
 
+  if(isLoading) {
+    return (
+      <div style={{ 
+        height: '100vh', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center' 
+      }}>
+        <Spin size="large" />
+      </div>
+    )
+  }
+  
   return children;
 };
 
