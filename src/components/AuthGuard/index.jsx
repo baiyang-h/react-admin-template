@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getToken } from '@/utils/token';
 import { getUserInfo, selectUserInfo, logout } from '@/store/user';
 import { Spin } from 'antd';
+import { constantRoutes } from '@/router'
 
 const AuthGuard = ({ children }) => {
   const dispatch = useDispatch();
@@ -22,13 +23,13 @@ const AuthGuard = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('APP:useEffect')
     const checkAuth = async () => {
       const token = getToken();
       
       // 白名单路由，不需要验证
-      const whiteList = ['/login', '/404', '/403'];
+      const whiteList = constantRoutes.map(route => route.path)
       if (whiteList.includes(location.pathname)) {
+        setIsLoading(false);
         return;
       }
       if (token) {

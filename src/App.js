@@ -40,11 +40,14 @@ function App() {
     <div className="App">
       <AuthGuard>
         <Routes>
+          {/* 根路径重定向到 /home */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
+
           {/* 渲染 constantRoutes（无需权限判断） */}
           { renderRoutes(constantRoutes, []) }
 
           {/* 渲染带 Layout 的路由 */}
-          <Route path="/" element={<Layout />}>
+          <Route element={<Layout />}>
             {/* 渲染 appRoutes（需要权限判断） */}
             {renderRoutes(appRoutes, userPermissions)}
           </Route>

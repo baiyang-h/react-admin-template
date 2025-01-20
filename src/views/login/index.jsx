@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { login, selectUserLoading, getUserInfo } from '@/store/user';
 import './index.css';
 
@@ -10,9 +10,11 @@ const Login = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectUserLoading);
   const navigate = useNavigate();
+  const location = useLocation()
 
   const onFinish = async (values) => {
     console.log('登录信息:', values);
+    const form = location.state?.from
     try {
       // 登录 
       await dispatch(login(values)).unwrap();
@@ -20,8 +22,12 @@ const Login = () => {
       await dispatch(getUserInfo()).unwrap();
       // 登录成功后的处理
       message.success('登录成功！');
-      // 登录成功后跳转到首页
-      navigate('/');
+      // 登录成功后跳转到首页, 如果之前是因为某个页面突然被重定向到login，那么登录后重新回到之前的路由页面
+      if(form) {
+        navigate(form)
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       message.error('登录失败，请重试！');
       // 错误处理
