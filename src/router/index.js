@@ -1,5 +1,10 @@
 import { lazy } from 'react';
 import LazyLoad from '@/components/LazyLoad';
+import {
+  ApartmentOutlined,
+  FormOutlined,
+  HomeOutlined, TableOutlined, UserOutlined
+} from '@ant-design/icons';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 // 开发环境使用延迟，生产环境不使用
@@ -73,6 +78,7 @@ export const appRoutes = [
     element: <LazyLoad><Home /></LazyLoad>,
     meta: {
       title: 'Home',
+      icon: <HomeOutlined />,
       permission: 'home'
     },
   },
@@ -89,6 +95,7 @@ export const appRoutes = [
     path: '/permission',
     meta: {
       title: 'Permission',
+      icon: <UserOutlined />,
       permission: 'permission'
     },
     children: [
@@ -114,6 +121,7 @@ export const appRoutes = [
     path: '/table',
     meta: {
       title: 'Table',
+      icon: <TableOutlined />,
       permission: 'table'
     },
     children: [
@@ -140,6 +148,7 @@ export const appRoutes = [
     element: <LazyLoad><Form /></LazyLoad>,
     meta: {
       title: 'Form',
+      icon: <FormOutlined />,
       permission: 'form'
     },
   },
@@ -147,6 +156,7 @@ export const appRoutes = [
     path: '/nested',
     meta: {
       title: 'Nested',
+      icon: <ApartmentOutlined />,
       permission: 'nested'
     },
     children: [
@@ -196,7 +206,7 @@ export const appRoutes = [
   },
 ]
 
-function generateFullPath(routes, parentPath = '') {
+export function generateFullPath(routes, parentPath = '') {
   return routes.map((route) => {
     // 1.拼接完整路径，避免多个斜杠，2.如果最后也是斜杆则也去除
     const fullPath = `${parentPath}/${route.path}`.replace(/\/+/g, '/').replace(/\/$/, '');

@@ -1,20 +1,16 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectUserInfo, setUserInfo } from '@/store/user'
 import { Button } from 'antd';
 
 export default function Home() {
+  const dispatch = useDispatch()
   const userInfo = useSelector(selectUserInfo);
-  console.log(userInfo)
 
   const handleClick = () => {
-    console.log({
+    dispatch(setUserInfo({  // 使用 dispatch 触发 action
       ...userInfo,
       username: 'aaa'
-    })
-    setUserInfo({
-      ...userInfo,
-      username: 'aaa'
-    })
+    }));
   }
 
   return (

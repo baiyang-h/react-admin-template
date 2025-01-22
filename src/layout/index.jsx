@@ -5,11 +5,9 @@ import { selectPermissions } from '@/store/user'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
+import AppBreadcrumb from '@/components/Breadcrumb';
 import { appRoutes } from '../router'
 import './index.scss'
 const { Header, Sider, Content } = Layout;
@@ -114,6 +112,10 @@ const AppLayout = () => {
             }}
           />
         </Header>
+        {/* 面包屑组件 */}
+        <div style={{ padding: '0 24px' }}>
+          <AppBreadcrumb />
+        </div>
         <Content
           style={{
             margin: '24px 16px',
